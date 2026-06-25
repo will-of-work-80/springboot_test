@@ -1,0 +1,59 @@
+# Maven
+target/
+*.war
+*.ear
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Spring Boot
+application-local.properties
+application-dev.properties
+
+# Gradle
+build/
+.gradle/
+
+# Node.js / npm
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS specific files
+Thumbs.db
+.DS_Store
+*.orig
+
+# Documentation (development only)
+Docs/
+
+# IDE temp files
+*.sublime-workspace
+*.sublime-project
+
+# Others
+*.log
+*.class
+*.jar

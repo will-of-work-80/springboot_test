@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メイン画面</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title" th:text="${companyName}">〇〇 Company</h1>
+            <div class="login-info">
+                <div class="login-item">
+                    <span class="info-label">部署:</span>
+                    <span class="info-value" th:text="${department}">△△部署</span>
+                </div>
+                <div class="login-item">
+                    <span class="info-label">名前:</span>
+                    <span class="info-value" th:text="${userName}">秋山　◇◇</span>
+                </div>
+                <div class="login-item">
+                    <span class="info-label">スタッフコード:</span>
+                    <span class="info-value" th:text="${staffCode}">999999999901</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="section-title">メニュー</h2>
+            <div class="menu-grid">
+                <th:block th:each="item : ${menuItems}">
+                    <th:block th:if="${item.url != null}">
+                        <!-- アクティブなメニュー項目 -->
+                        <a th:href="@{${item.url}}" class="menu-item active">
+                            <div class="menu-icon">
+                                <i th:class="'fas fa-' + ${item.icon}"></i>
+                            </div>
+                            <span class="menu-title" th:text="${item.title}">タイトル</span>
+                        </a>
+                    </th:block>
+                    <th:block th:unless="${item.url != null}">
+                        <!-- 非アクティブなメニュー項目 -->
+                        <div class="menu-item disabled">
+                            <div class="menu-icon">
+                                <i th:class="'fas fa-' + ${item.icon}"></i>
+                            </div>
+                            <span class="menu-title" th:text="${item.title}">タイトル</span>
+                            <span class="soon-badge">準備中</span>
+                        </div>
+                    </th:block>
+                </th:block>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <p class="footer-text">こちらはテスト用のサイトです。</p>
+        <div class="footer-links">
+            <a th:href="@{/}">ホームに戻る</a>
+        </div>
+    </footer>
+</body>
+</html>

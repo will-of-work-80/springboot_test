@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Spring Boot + Thymeleaf</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${title}">Default Title</h1>
+
+        <p class="message" th:text="${message}">Default message</p>
+
+        <div class="time-info">
+            <strong>Current Time:</strong>
+            <span th:text="${#temporals.format(currentTime, 'yyyy-MM-dd HH:mm:ss')}">Time here</span>
+        </div>
+
+        <h2>Sample Items:</h2>
+        <ul class="items-list">
+            <li th:each="item : ${items}" th:text="${item}">Item</li>
+        </ul>
+
+        <div class="nav-links">
+            <a th:href="@{/hello}">Say Hello</a>
+            <a th:href="@{/hello(name='User')}">Say Hello to User</a>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/main}">Main Page</a>
+        </div>
+    </div>
+</body>
+</html>
