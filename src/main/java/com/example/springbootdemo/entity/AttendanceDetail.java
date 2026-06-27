@@ -26,6 +26,15 @@ public class AttendanceDetail {
 
     private LocalTime endTime;
 
+    @Column(name = "break_minutes")
+    private Integer breakMinutes;
+
+    @Column(name = "night_break_minutes")
+    private Integer nightBreakMinutes;
+
+    @Column(length = 500)
+    private String remarks;
+
     @Column(length = 50)
     private String approvalStatus;
 
@@ -52,8 +61,8 @@ public class AttendanceDetail {
     public AttendanceDetail(AttendanceMonth attendanceMonth, Integer dayOfMonth) {
         this.attendanceMonth = attendanceMonth;
         this.dayOfMonth = dayOfMonth;
-        this.classification = "出勤";
-        this.approvalStatus = "未申請";
+        this.classification = null;
+        this.approvalStatus = null;
     }
 
     // Getters and Setters
@@ -111,6 +120,30 @@ public class AttendanceDetail {
 
     public void setApprovalStatus(String approvalStatus) {
         this.approvalStatus = approvalStatus;
+    }
+
+    public Integer getBreakMinutes() {
+        return breakMinutes;
+    }
+
+    public void setBreakMinutes(Integer breakMinutes) {
+        this.breakMinutes = breakMinutes;
+    }
+
+    public Integer getNightBreakMinutes() {
+        return nightBreakMinutes;
+    }
+
+    public void setNightBreakMinutes(Integer nightBreakMinutes) {
+        this.nightBreakMinutes = nightBreakMinutes;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public LocalDateTime getCreatedDate() {

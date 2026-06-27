@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<head>
+    <title>勤怠情報入力</title>
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/attendance-edit.css}">
+    </th:block>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+        <div class="container">
+            <div class="edit-card">
+                <h2 class="section-title" th:text="${dateDisplay}">2026年06月01日（水）</h2>
+
+                <form id="attendanceForm" th:action="@{/attendance/save}" method="POST">
+                    <!-- 隠しフィールド -->
+                    <input type="hidden" name="year" th:value="${year}">
+                    <input type="hidden" name="month" th:value="${month}">
+                    <input type="hidden" name="day" th:value="${day}">
+
+                    <!-- 実績勤怠情報入力 -->
+                    <div class="form-section">
+                        <h3 class="form-title">実績勤怠情報入力</h3>
+
+                        <!-- 区分（必須） -->
+                        <div class="form-group">
+                            <label for="classification" class="form-label">区分<span class="required">（必須）</span></label>
+                            <select id="classification" name="classification" class="form-control">
+                                <option value="">選択してください</option>
+                                <option value="通常" th:selected="${attendanceDetail?.classification == '通常'}">通常</option>
+                                <option value="公休日" th:selected="${attendanceDetail?.classification == '公休日'}">公休日</option>
+                                <option value="休出" th:selected="${attendanceDetail?.classification == '休出'}">休出</option>
+                                <option value="法休出" th:selected="${attendanceDetail?.classification == '法休出'}">法休出</option>
+                            </select>
+                        </div>
+
+                        <!-- 始業時間 ～ 終業時間 -->
+                        <div class="form-group time-group">
+                            <label class="form-label">勤務時間</label>
+                            <div class="time-inputs">
+                                <input type="text" id="startTime" name="startTime" class="form-control time-input"
+                                       placeholder="0900" maxlength="4"
+                                       th:value="${attendanceDetail?.startTime != null ? attendanceDetail.startTime.format(T(java.time.format.DateTimeFormatter).ofPattern('HHmm')) : ''}">
+                                <span class="time-separator">～</span>
+                                <input type="text" id="endTime" name="endTime" class="form-control time-input"
+                                       placeholder="1800" maxlength="4"
+                                       th:value="${attendanceDetail?.endTime != null ? attendanceDetail.endTime.format(T(java.time.format.DateTimeFormatter).ofPattern('HHmm')) : ''}">
+                            </div>
+                        </div>
+
+                        <!-- 休憩（分） -->
+                        <div class="form-group">
+                            <input type="text" id="breakMinutes" name="breakMinutes" class="form-control"
+                                   placeholder="休憩（分）" maxlength="3"
+                                   th:value="${attendanceDetail?.breakMinutes}">
+                        </div>
+
+                        <!-- 深夜休憩（分） -->
+                        <div class="form-group">
+                            <input type="text" id="nightBreakMinutes" name="nightBreakMinutes" class="form-control"
+                                   placeholder="深夜休憩（分）" maxlength="3"
+                                   th:value="${attendanceDetail?.nightBreakMinutes}">
+                        </div>
+
+                        <!-- 日々の業務内容及び就業場所 -->
+                        <div class="form-group">
+                            <textarea id="remarks" name="remarks" class="form-control" rows="5" maxlength="300"
+                                      placeholder="日々の業務内容及び就業場所"
+                                      th:text="${attendanceDetail?.remarks}"></textarea>
+                            <small class="char-count"><span id="charCount">0</span>/300</small>
+                        </div>
+                    </div>
+
+                    <!-- ボタングループ -->
+                    <div class="button-group">
+                        <button type="button" class="btn btn-primary" onclick="submitForm()">登録内容の確認へ</button>
+                        <button type="button" class="btn btn-secondary" onclick="showCancelDialog()">キャンセル</button>
+                        <button type="button" class="btn btn-danger" onclick="showDeleteDialog()">削除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- キャンセルダイアログ -->
+        <div id="cancelDialog" class="dialog-overlay" style="display:none;">
+            <div class="dialog-content">
+                <p>保存されていません。クリアしますか？</p>
+                <div class="dialog-buttons">
+                    <button class="btn btn-secondary" onclick="closeCancelDialog()">キャンセル</button>
+                    <button class="btn btn-primary" onclick="clearForm()">クリア</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 削除ダイアログ -->
+        <div id="deleteDialog" class="dialog-overlay" style="display:none;">
+            <div class="dialog-content">
+                <p>入力したデータを削除しますか？</p>
+                <div class="dialog-buttons">
+                    <button class="btn btn-secondary" onclick="closeDeleteDialog()">キャンセル</button>
+                    <button class="btn btn-danger" onclick="closeDeleteDialog()">削除する</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- エラーダイアログ -->
+        <div id="errorDialog" class="dialog-overlay" style="display:none;">
+            <div class="dialog-content">
+                <h4>エラーが発生しました</h4>
+                <p id="errorMessage"></p>
+                <div class="dialog-buttons">
+                    <button class="btn btn-primary" onclick="closeErrorDialog()">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            // 時間入力：数値のみ、4桁制限
+            const timeInputs = document.querySelectorAll('.time-input');
+            timeInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+                });
+            });
+
+            // その他数値入力：数値のみ入力制限
+            const numericInputs = document.querySelectorAll('#breakMinutes, #nightBreakMinutes');
+            numericInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            });
+
+            // 文字数カウント
+            const remarksTextarea = document.getElementById('remarks');
+            const charCount = document.getElementById('charCount');
+            remarksTextarea.addEventListener('input', function() {
+                charCount.textContent = this.value.length;
+            });
+
+            // 初期表示時に文字数を設定
+            charCount.textContent = remarksTextarea.value.length;
+
+            // ダイアログ処理
+            function showCancelDialog() {
+                document.getElementById('cancelDialog').style.display = 'flex';
+            }
+
+            function closeCancelDialog() {
+                document.getElementById('cancelDialog').style.display = 'none';
+            }
+
+            function clearForm() {
+                document.getElementById('attendanceForm').reset();
+                charCount.textContent = '0';
+                closeCancelDialog();
+            }
+
+            function showDeleteDialog() {
+                document.getElementById('deleteDialog').style.display = 'flex';
+            }
+
+            function closeDeleteDialog() {
+                document.getElementById('deleteDialog').style.display = 'none';
+            }
+
+            function showErrorDialog(message) {
+                document.getElementById('errorMessage').textContent = message;
+                document.getElementById('errorDialog').style.display = 'flex';
+            }
+
+            function closeErrorDialog() {
+                document.getElementById('errorDialog').style.display = 'none';
+            }
+
+            // フォーム送信
+            function submitForm() {
+                const errors = validateForm();
+                if (errors.length > 0) {
+                    showErrorDialog(errors.join('\n'));
+                    return;
+                }
+                document.getElementById('attendanceForm').submit();
+            }
+
+            // バリデーション処理
+            function validateForm() {
+                const errors = [];
+                const classification = document.getElementById('classification').value;
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+                const breakMinutes = document.getElementById('breakMinutes').value;
+                const nightBreakMinutes = document.getElementById('nightBreakMinutes').value;
+
+                // 区分の確認
+                if (!classification) {
+                    errors.push('区分（必須）を選択してください。');
+                    return errors;
+                }
+
+                // 始業時間と終業時間のチェック
+                if ((startTime && !endTime) || (!startTime && endTime)) {
+                    errors.push('正しい範囲を入力してください。');
+                }
+
+                // 時間形式の検証
+                if (startTime && !isValidTime(startTime)) {
+                    errors.push('始業時間は正しい形式で入力してください（例：0900）。');
+                }
+                if (endTime && !isValidTime(endTime)) {
+                    errors.push('終業時間は正しい形式で入力してください（例：1800）。');
+                }
+
+                // 通常以外の場合、始業時間・終業時間は入力できない
+                if (classification !== '通常' && (startTime || endTime)) {
+                    errors.push('始業時間と終業時間入力できません。');
+                }
+
+                // 通常以外の場合、休憩は入力できない
+                if (classification !== '通常' && breakMinutes) {
+                    errors.push('休憩（分）入力できません。');
+                }
+
+                // 通常以外の場合、深夜休憩は入力できない
+                if (classification !== '通常' && nightBreakMinutes) {
+                    errors.push('深夜休憩（分）入力できません。');
+                }
+
+                return errors;
+            }
+
+            // 時間形式の検証
+            function isValidTime(timeStr) {
+                if (timeStr.length !== 4) return false;
+                const hour = parseInt(timeStr.substring(0, 2));
+                const minute = parseInt(timeStr.substring(2, 4));
+                return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+            }
+
+            // ダイアログ外をクリックしたら閉じる
+            document.querySelectorAll('.dialog-overlay').forEach(dialog => {
+                dialog.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

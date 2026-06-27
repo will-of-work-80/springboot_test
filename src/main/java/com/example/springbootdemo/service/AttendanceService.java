@@ -5,6 +5,7 @@ import com.example.springbootdemo.entity.AttendanceDetail;
 import com.example.springbootdemo.repository.AttendanceMonthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.YearMonth;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -58,5 +59,21 @@ public class AttendanceService {
             return "sunday";
         }
         return "weekday";
+    }
+
+    public String getDayOfWeekJapanese(Integer year, Integer month, Integer day) {
+        LocalDate date = LocalDate.of(year, month, day);
+        String[] dayNames = {"日", "月", "火", "水", "木", "金", "土"};
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        int index = dayOfWeek == 7 ? 0 : dayOfWeek;
+        return dayNames[index];
+    }
+
+    @Transactional
+    public void saveAttendanceDetail(AttendanceDetail detail) {
+        if (detail.getId() == null) {
+            detail.getAttendanceMonth().getDetails().add(detail);
+        }
+        attendanceMonthRepository.save(detail.getAttendanceMonth());
     }
 }

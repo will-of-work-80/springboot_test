@@ -46,16 +46,17 @@
                     <tbody>
                         <tr th:each="detail : ${attendanceMonth.details}"
                             th:classappend="${detail.dayOfMonth % 7 == 6 ? 'saturday' : detail.dayOfMonth % 7 == 0 ? 'sunday' : 'weekday'}"
-                            class="attendance-row">
+                            class="attendance-row"
+                            th:onclick="|location.href='@{/attendance/edit/}' + ${year} + '/' + ${month} + '/' + ${detail.dayOfMonth}|"
+                            style="cursor: pointer;">
                             <td class="date-cell">
-                                <button class="date-button" type="button" onclick="alert('未対応中')">
-                                    <span th:text="${detail.dayOfMonth}">1</span>
-                                </button>
+                                <span th:text="|${formattedDateMap.get(detail.dayOfMonth)} |">01 </span>
+                                <span class="day-of-week" th:text="${dayOfWeekMap.get(detail.dayOfMonth)}">水</span>
                             </td>
-                            <td th:text="${detail.classification}">出勤</td>
+                            <td th:text="${detail.classification != null ? detail.classification : '-'}">-</td>
                             <td th:text="${detail.startTime != null ? #temporals.format(detail.startTime, 'HH:mm') : '-'}">-</td>
                             <td th:text="${detail.endTime != null ? #temporals.format(detail.endTime, 'HH:mm') : '-'}">-</td>
-                            <td th:text="${detail.approvalStatus}">未申請</td>
+                            <td th:text="${detail.approvalStatus != null ? detail.approvalStatus : '-'}">-</td>
                         </tr>
                     </tbody>
                 </table>
