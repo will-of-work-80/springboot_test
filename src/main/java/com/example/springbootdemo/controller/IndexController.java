@@ -1,5 +1,8 @@
 package com.example.springbootdemo.controller;
 
+import com.example.springbootdemo.entity.User;
+import com.example.springbootdemo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,9 @@ import java.util.List;
 
 @Controller
 public class IndexController {
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -38,15 +44,18 @@ public class IndexController {
 
     @GetMapping("/main")
     public String main(Model model) {
-        model.addAttribute("companyName", "〇〇 Company");
-        model.addAttribute("department", "△△部署");
-        model.addAttribute("userName", "鄭　守正");
-        model.addAttribute("staffCode", "999999999901");
+        // DB からユーザー情報を取得
+        User user = userService.getDefaultUser();
+
+        model.addAttribute("companyName", user.getCompanyName());
+        model.addAttribute("department", user.getDepartment());
+        model.addAttribute("userName", user.getUserName());
+        model.addAttribute("staffCode", user.getStaffCode());
 
         // メニュー項目の定義
         List<MenuItem> menuItems = Arrays.asList(
             new MenuItem("予定シフト", "scheduled-shift", null),
-            new MenuItem("WEB勤怠", "web-attendance", "/hello"),
+            new MenuItem("WEB勤怠", "web-attendance", "/attendance"),
             new MenuItem("その他勤怠", "other-attendance", null),
             new MenuItem("給与明細", "salary-slip", null),
             new MenuItem("経費申請", "expense-request", null),

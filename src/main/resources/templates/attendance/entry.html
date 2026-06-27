@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<head>
+    <title>WEB勤怠</title>
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/attendance.css}">
+    </th:block>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+        <div class="container">
+            <h2 class="section-title">WEB勤怠</h2>
+
+            <!-- 月度表示ライン -->
+            <div class="month-navigation">
+                <a th:if="${hasPreviousMonth}" th:href="@{${previousUrl}}" class="month-button previous">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <a th:unless="${hasPreviousMonth}" class="month-button previous disabled" href="javascript:void(0)">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+
+                <span class="month-display" th:text="${monthDisplay}">2026年06月度</span>
+
+                <a th:href="@{${nextUrl}}" class="month-button next">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+
+            <!-- 勤怠一覧テーブル -->
+            <div class="table-container">
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>日付</th>
+                            <th>区分</th>
+                            <th>始業</th>
+                            <th>就業</th>
+                            <th>申請/承認</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="detail : ${attendanceMonth.details}"
+                            th:classappend="${detail.dayOfMonth % 7 == 6 ? 'saturday' : detail.dayOfMonth % 7 == 0 ? 'sunday' : 'weekday'}"
+                            class="attendance-row">
+                            <td class="date-cell">
+                                <button class="date-button" type="button" onclick="alert('未対応中')">
+                                    <span th:text="${detail.dayOfMonth}">1</span>
+                                </button>
+                            </td>
+                            <td th:text="${detail.classification}">出勤</td>
+                            <td th:text="${detail.startTime != null ? #temporals.format(detail.startTime, 'HH:mm') : '-'}">-</td>
+                            <td th:text="${detail.endTime != null ? #temporals.format(detail.endTime, 'HH:mm') : '-'}">-</td>
+                            <td th:text="${detail.approvalStatus}">未申請</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ナビゲーションリンク -->
+            <div class="nav-links">
+                <a th:href="@{/main}">メインページに戻る</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>
