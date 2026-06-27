@@ -1,10 +1,12 @@
 {
-  "name": "Spring Boot + Thymeleaf",
+  "name": "Spring Boot + Thymeleaf (Alpine)",
 
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
-    "args": {}
+    "args": {
+      "VARIANT": "17-alpine"
+    }
   },
 
   "remoteUser": "vscode",

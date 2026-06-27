@@ -36,11 +36,25 @@ if command_exists mvn; then
 else
     echo -e "${RED}⚠️  Maven not found!${NC}"
     echo -e "${YELLOW}Attempting to install Maven...${NC}"
-    apt-get update || true
-    apt-get install -y maven || {
-        echo -e "${RED}Failed to install Maven via apt-get${NC}"
+
+    # Try Alpine Linux package manager (apk)
+    if command_exists apk; then
+        apk update || true
+        apk add --no-cache maven openjdk17 || {
+            echo -e "${RED}Failed to install Maven via apk${NC}"
+            exit 1
+        }
+    # Try Debian/Ubuntu package manager (apt-get)
+    elif command_exists apt-get; then
+        apt-get update || true
+        apt-get install -y maven || {
+            echo -e "${RED}Failed to install Maven via apt-get${NC}"
+            exit 1
+        }
+    else
+        echo -e "${RED}❌ No compatible package manager found${NC}"
         exit 1
-    }
+    fi
 
     # Verify installation
     if command_exists mvn; then

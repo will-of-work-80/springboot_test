@@ -1,18 +1,15 @@
 # Development container for Spring Boot + Thymeleaf
-FROM mcr.microsoft.com/devcontainers/java:17-bullseye
+FROM mcr.microsoft.com/devcontainers/java:17-alpine
 
-# Update package manager
-RUN apt-get update && apt-get upgrade -y
-
-# Install basic tools
-RUN apt-get install -y \
+# Update package manager and install tools
+RUN apk update && apk add --no-cache \
     git \
     curl \
     wget \
     zip \
     unzip \
     maven \
-    && rm -rf /var/lib/apt/lists/*
+    openjdk17
 
 # Verify Java installation
 RUN java -version
@@ -21,7 +18,7 @@ RUN java -version
 RUN mvn -version
 
 # Set environment variables
-ENV JAVA_HOME=/usr/local/sdkman/candidates/java/current \
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk \
     MAVEN_HOME=/usr \
     PATH=$JAVA_HOME/bin:/usr/bin:$PATH
 

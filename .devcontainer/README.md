@@ -51,9 +51,12 @@ docker run -it --rm \
 ### インストール済みツール
 
 - **Java 17** - OpenJDK
-- **Maven 3.9.0** - ビルドツール
+- **Maven** - ビルドツール
 - **Git** - バージョン管理
-- **curl, wget** - ダウンロードツール
+- **curl, wget, zip, unzip** - ユーティリティ
+- **Alpine Linux** - 軽量な Linux OS
+
+**注**: Codespaces では Alpine Linux を使用しています（軽量で高速）
 
 ### VS Code 拡張機能
 
@@ -164,12 +167,22 @@ VS Code のリモートウィンドウを閉じるか、`F1` → `Reopen Folder 
 **原因**: Maven がインストールされていない（Codespaces のキャッシュが古い場合など）
 
 **解決方法**:
+
+Alpine Linux の場合（Codespaces）:
 ```bash
 # ターミナルで手動で再インストール
-apt-get update && apt-get install -y maven
+apk update
+apk add --no-cache maven openjdk17
+```
 
-# または Codespace を再作成
-# GitHub → Code → Codespaces → 既存の Codespace を Delete → 新規作成
+Debian/Ubuntu の場合（ローカル Dev Containers）:
+```bash
+apt-get update && apt-get install -y maven
+```
+
+または Codespace を再作成:
+```
+GitHub → Code → Codespaces → 既存の Codespace を Delete → 新規作成
 ```
 
 #### ビルドが遅い、またはタイムアウト
