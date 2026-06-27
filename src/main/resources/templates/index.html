@@ -3,32 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Spring Boot + Thymeleaf</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <title>ログイン</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
-    <div class="container">
-        <h1 th:text="${title}">Default Title</h1>
-
-        <p class="message" th:text="${message}">Default message</p>
-
-        <div class="time-info">
-            <strong>Current Time:</strong>
-            <span th:text="${#temporals.format(currentTime, 'yyyy-MM-dd HH:mm:ss')}">Time here</span>
+    <div class="login-container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <h1 class="company-title">TEST COMPANY</h1>
         </div>
 
-        <h2>Sample Items:</h2>
-        <ul class="items-list">
-            <li th:each="item : ${items}" th:text="${item}">Item</li>
-        </ul>
+        <!-- ログインフォーム -->
+        <div class="login-card">
+            <form id="loginForm" method="POST" th:action="@{/login}">
+                <!-- ユーザー名入力 -->
+                <div class="form-group">
+                    <label for="userId" class="form-label">User:</label>
+                    <input type="text" id="userId" name="userId" class="form-control"
+                           placeholder="ユーザー名を入力" required>
+                </div>
 
-        <div class="nav-links">
-            <a th:href="@{/hello}">Say Hello</a>
-            <a th:href="@{/hello(name='User')}">Say Hello to User</a>
-            <a th:href="@{/about}">About</a>
-            <a th:href="@{/main}">Main Page</a>
+                <!-- パスワード入力 -->
+                <div class="form-group">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control"
+                           placeholder="パスワードを入力" required>
+                </div>
+
+                <!-- エラーメッセージ表示 -->
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}">
+                    エラーメッセージ
+                </div>
+
+                <!-- ログインボタン -->
+                <button type="submit" class="btn btn-login">LOGIN</button>
+            </form>
+        </div>
+
+        <!-- フッター -->
+        <div class="footer">
+            <p>こちらはテスト用のサイトです。</p>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        // ログイン失敗時のダイアログ表示
+        const error = [[${error}]];
+        if (error && error !== 'null') {
+            alert('ログインが失敗しました。\n\n' + error);
+        }
+    </script>
 </body>
 </html>

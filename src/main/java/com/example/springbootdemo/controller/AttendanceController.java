@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalTime;
-import java.time.YearMonth;
 import java.time.LocalDate;
 
 @Controller
@@ -30,10 +30,16 @@ public class AttendanceController {
     public String attendance(
             @RequestParam(name = "year", required = false) Integer year,
             @RequestParam(name = "month", required = false) Integer month,
+            HttpSession session,
             Model model) {
 
-        // ユーザー情報を取得
-        User user = userService.getDefaultUser();
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/";
+        }
+
+        // セッションからユーザー情報を取得
+        User user = loggedInUser;
         model.addAttribute("companyName", user.getCompanyName());
         model.addAttribute("department", user.getDepartment());
         model.addAttribute("userName", user.getUserName());
@@ -101,10 +107,16 @@ public class AttendanceController {
             @PathVariable Integer year,
             @PathVariable Integer month,
             @PathVariable Integer day,
+            HttpSession session,
             Model model) {
 
-        // ユーザー情報を取得
-        User user = userService.getDefaultUser();
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/";
+        }
+
+        // セッションからユーザー情報を取得
+        User user = loggedInUser;
         model.addAttribute("companyName", user.getCompanyName());
         model.addAttribute("department", user.getDepartment());
         model.addAttribute("userName", user.getUserName());
@@ -147,10 +159,16 @@ public class AttendanceController {
             @RequestParam(required = false) Integer breakMinutes,
             @RequestParam(required = false) Integer nightBreakMinutes,
             @RequestParam(required = false) String remarks,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
 
-        // ユーザー情報を取得
-        User user = userService.getDefaultUser();
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/";
+        }
+
+        // セッションからユーザー情報を取得
+        User user = loggedInUser;
 
         // 勤怠情報を取得
         AttendanceMonth attendanceMonth = attendanceService.getOrCreateAttendanceMonth(user.getId(), year, month);
@@ -199,6 +217,29 @@ public class AttendanceController {
         }
 
         redirectAttributes.addFlashAttribute("message", "勤怠情報を保存しました。");
+        return "redirect:/attendance?year=" + year + "&month=" + month;
+    }
+
+    @PostMapping("/attendance/delete")
+    public String delete(
+            @RequestParam Integer year,
+            @RequestParam Integer month,
+            @RequestParam Integer day,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/";
+        }
+
+        // セッションからユーザー情報を取得
+        User user = loggedInUser;
+
+        // 勤怠情報を削除
+        attendanceService.deleteAttendanceDetail(user.getId(), year, month, day);
+
+        redirectAttributes.addFlashAttribute("message", "勤怠情報を削除しました。");
         return "redirect:/attendance?year=" + year + "&month=" + month;
     }
 }

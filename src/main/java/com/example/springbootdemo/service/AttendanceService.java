@@ -76,4 +76,21 @@ public class AttendanceService {
         }
         attendanceMonthRepository.save(detail.getAttendanceMonth());
     }
+
+    @Transactional
+    public void deleteAttendanceDetail(Long userId, Integer year, Integer month, Integer day) {
+        Optional<AttendanceMonth> attendanceMonth = attendanceMonthRepository.findByUserIdAndYearAndMonth(userId, year, month);
+
+        if (attendanceMonth.isPresent()) {
+            AttendanceDetail detail = attendanceMonth.get().getDetails().stream()
+                    .filter(d -> d.getDayOfMonth().equals(day))
+                    .findFirst()
+                    .orElse(null);
+
+            if (detail != null) {
+                attendanceMonth.get().getDetails().remove(detail);
+                attendanceMonthRepository.save(attendanceMonth.get());
+            }
+        }
+    }
 }

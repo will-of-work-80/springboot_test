@@ -22,14 +22,22 @@ public class User {
     @Column(nullable = false, unique = true)
     private String staffCode;
 
+    @Column(nullable = false, unique = true)
+    private String userId;
+
+    @Column(nullable = false)
+    private String password;
+
     public User() {
     }
 
-    public User(String companyName, String department, String userName, String staffCode) {
+    public User(String companyName, String department, String userName, String staffCode, String userId, String password) {
         this.companyName = companyName;
         this.department = department;
         this.userName = userName;
         this.staffCode = staffCode;
+        this.userId = userId;
+        this.password = password;
     }
 
     // Getters and Setters
@@ -73,6 +81,22 @@ public class User {
         this.staffCode = staffCode;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -81,6 +105,7 @@ public class User {
                 ", department='" + department + '\'' +
                 ", userName='" + userName + '\'' +
                 ", staffCode='" + staffCode + '\'' +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

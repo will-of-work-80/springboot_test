@@ -1,37 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>メイン画面</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <!-- ヘッダー -->
-    <header class="header">
-        <div class="header-content">
-            <h1 class="header-title" th:text="${companyName}">〇〇 Company</h1>
-            <div class="login-info">
-                <div class="login-item">
-                    <span class="info-label">部署:</span>
-                    <span class="info-value" th:text="${department}">△△部署</span>
-                </div>
-                <div class="login-item">
-                    <span class="info-label">名前:</span>
-                    <span class="info-value" th:text="${userName}">秋山　◇◇</span>
-                </div>
-                <div class="login-item">
-                    <span class="info-label">スタッフコード:</span>
-                    <span class="info-value" th:text="${staffCode}">999999999901</span>
-                </div>
-            </div>
-        </div>
-    </header>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 
-    <!-- メインコンテンツ -->
-    <main class="main-content">
+<head>
+    <title>メイン画面</title>
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/main.css}">
+    </th:block>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
         <div class="container">
             <h2 class="section-title">メニュー</h2>
             <div class="menu-grid">
@@ -58,14 +38,6 @@
                 </th:block>
             </div>
         </div>
-    </main>
-
-    <!-- フッター -->
-    <footer class="footer">
-        <p class="footer-text">こちらはテスト用のサイトです。</p>
-        <div class="footer-links">
-            <a th:href="@{/}">ホームに戻る</a>
-        </div>
-    </footer>
+    </th:block>
 </body>
 </html>

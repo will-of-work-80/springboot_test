@@ -2,46 +2,46 @@ package com.example.springbootdemo.config;
 
 import com.example.springbootdemo.entity.User;
 import com.example.springbootdemo.repository.UserRepository;
+import com.example.springbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
-
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public void run(String... args) throws Exception {
-        logger.info("Initializing database with sample data...");
-
-        // Check if data already exists
-        if (userRepository.count() == 0) {
-            logger.info("No data found. Creating sample users...");
-
-            userRepository.save(new User("〇〇 Company", "△△部署", "秋山　◇◇", "999999999901"));
-            userRepository.save(new User("〇〇 Company", "営業部", "田中　太郎", "999999999902"));
-            userRepository.save(new User("〇〇 Company", "企画部", "鈴木　花子", "999999999903"));
-            userRepository.save(new User("〇〇 Company", "IT部", "佐藤　次郎", "999999999904"));
-
-            logger.info("Sample users created successfully!");
-        } else {
-            logger.info("Data already exists. Total users: {}", userRepository.count());
+        // テストユーザーのパスワードを初期化
+        User user1 = userRepository.findByUserId("testUser").orElse(null);
+        if (user1 != null) {
+            user1.setPassword(userService.encodePassword("testUser01"));
+            userRepository.save(user1);
         }
 
-        // Log all users
-        logger.info("Current users in database:");
-        userRepository.findAll().forEach(user ->
-            logger.info("  - {} ({}, {}, {})",
-                user.getUserName(),
-                user.getCompanyName(),
-                user.getDepartment(),
-                user.getStaffCode())
-        );
+        // その他のテストユーザーもパスワードを初期化
+        User user2 = userRepository.findByUserId("user2").orElse(null);
+        if (user2 != null) {
+            user2.setPassword(userService.encodePassword("user2pass"));
+            userRepository.save(user2);
+        }
+
+        User user3 = userRepository.findByUserId("user3").orElse(null);
+        if (user3 != null) {
+            user3.setPassword(userService.encodePassword("user3pass"));
+            userRepository.save(user3);
+        }
+
+        User user4 = userRepository.findByUserId("user4").orElse(null);
+        if (user4 != null) {
+            user4.setPassword(userService.encodePassword("user4pass"));
+            userRepository.save(user4);
+        }
     }
 }

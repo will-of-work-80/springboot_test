@@ -76,8 +76,8 @@
 }
 
 .time-inputs .time-input {
-    flex: 1;
-    max-width: 100px;
+    flex: 0 1 80px;
+    min-width: 50px;
     text-align: center;
     font-size: 16px;
     font-weight: 600;
@@ -205,6 +205,27 @@
     min-width: 100px;
 }
 
+/* ナビゲーションリンク */
+.nav-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.nav-links a {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.nav-links a:hover {
+    background-color: #0056b3;
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .edit-card {
@@ -227,12 +248,15 @@
         width: 100%;
     }
 
-    .time-inputs {
-        flex-direction: column;
+    .time-inputs .time-input {
+        flex: 0 1 60px;
+        font-size: 14px;
+        padding: 8px 6px;
     }
 
     .time-separator {
-        display: none;
+        font-size: 14px;
+        margin: 0 5px;
     }
 
     .dialog-content {
@@ -264,6 +288,18 @@
         font-size: 13px;
     }
 
+    .time-inputs .time-input {
+        flex: 0 1 50px;
+        font-size: 12px;
+        padding: 6px 4px;
+        letter-spacing: 1px;
+    }
+
+    .time-separator {
+        font-size: 12px;
+        margin: 0 3px;
+    }
+
     .btn {
         padding: 10px 16px;
         font-size: 13px;
@@ -276,5 +312,14 @@
 
     .dialog-buttons .btn {
         width: 100%;
+    }
+
+    .nav-links {
+        flex-direction: column;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
     }
 }

@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.time.LocalDateTime;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -18,39 +21,48 @@ public class IndexController {
     private UserService userService;
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("title", "Spring Boot + Thymeleaf Demo");
-        model.addAttribute("message", "Welcome to Thymeleaf!");
-        model.addAttribute("currentTime", LocalDateTime.now());
-
-        List<String> items = Arrays.asList("Item 1", "Item 2", "Item 3", "Item 4");
-        model.addAttribute("items", items);
-
+    public String index(HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser != null) {
+            return "redirect:/main";
+        }
         return "index";
     }
 
-    @GetMapping("/hello")
-    public String hello(@RequestParam(name = "name", defaultValue = "Guest") String name, Model model) {
-        model.addAttribute("name", name);
-        return "hello";
-    }
+    @PostMapping("/login")
+    public String login(
+            @RequestParam String userId,
+            @RequestParam String password,
+            Model model,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
-    @GetMapping("/about")
-    public String about(Model model) {
-        model.addAttribute("projectName", "Spring Boot Thymeleaf Demo");
-        model.addAttribute("version", "1.0.0");
-        return "about";
+        Optional<User> user = userService.findByUserId(userId);
+
+        if (user.isPresent() && userService.verifyPassword(password, user.get().getPassword())) {
+            session.setAttribute("loggedInUser", user.get());
+            return "redirect:/main";
+        } else {
+            model.addAttribute("error", "ユーザーIDまたはパスワードが正しくありません。");
+            return "index";
+        }
     }
 
     @GetMapping("/main")
-    public String main(Model model) {
-        // DB からユーザー情報を取得
-        User user = userService.getDefaultUser();
+    public String main(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/";
+        }
+
+        // セッションからユーザー情報を取得
+        User user = loggedInUser;
 
         model.addAttribute("companyName", user.getCompanyName());
         model.addAttribute("department", user.getDepartment());
         model.addAttribute("userName", user.getUserName());
         model.addAttribute("staffCode", user.getStaffCode());
+        model.addAttribute("pageTitle", "メイン画面");
 
         // メニュー項目の定義
         List<MenuItem> menuItems = Arrays.asList(

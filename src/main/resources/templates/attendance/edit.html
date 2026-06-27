@@ -18,9 +18,9 @@
 
                 <form id="attendanceForm" th:action="@{/attendance/save}" method="POST">
                     <!-- 隠しフィールド -->
-                    <input type="hidden" name="year" th:value="${year}">
-                    <input type="hidden" name="month" th:value="${month}">
-                    <input type="hidden" name="day" th:value="${day}">
+                    <input type="hidden" id="formYear" name="year" th:value="${year}">
+                    <input type="hidden" id="formMonth" name="month" th:value="${month}">
+                    <input type="hidden" id="formDay" name="day" th:value="${day}">
 
                     <!-- 実績勤怠情報入力 -->
                     <div class="form-section">
@@ -82,6 +82,11 @@
                         <button type="button" class="btn btn-danger" onclick="showDeleteDialog()">削除</button>
                     </div>
                 </form>
+
+                <!-- ナビゲーションリンク -->
+                <div class="nav-links">
+                    <a th:href="@{/attendance}">WEB勤怠画面に戻る</a>
+                </div>
             </div>
         </div>
 
@@ -102,7 +107,7 @@
                 <p>入力したデータを削除しますか？</p>
                 <div class="dialog-buttons">
                     <button class="btn btn-secondary" onclick="closeDeleteDialog()">キャンセル</button>
-                    <button class="btn btn-danger" onclick="closeDeleteDialog()">削除する</button>
+                    <button class="btn btn-danger" onclick="confirmDelete()">削除する</button>
                 </div>
             </div>
         </div>
@@ -166,6 +171,38 @@
 
             function closeDeleteDialog() {
                 document.getElementById('deleteDialog').style.display = 'none';
+            }
+
+            function confirmDelete() {
+                const year = document.getElementById('formYear').value;
+                const month = document.getElementById('formMonth').value;
+                const day = document.getElementById('formDay').value;
+
+                // フォームを動的に作成して削除を実行
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/attendance/delete';
+
+                const yearInput = document.createElement('input');
+                yearInput.type = 'hidden';
+                yearInput.name = 'year';
+                yearInput.value = year;
+                form.appendChild(yearInput);
+
+                const monthInput = document.createElement('input');
+                monthInput.type = 'hidden';
+                monthInput.name = 'month';
+                monthInput.value = month;
+                form.appendChild(monthInput);
+
+                const dayInput = document.createElement('input');
+                dayInput.type = 'hidden';
+                dayInput.name = 'day';
+                dayInput.value = day;
+                form.appendChild(dayInput);
+
+                document.body.appendChild(form);
+                form.submit();
             }
 
             function showErrorDialog(message) {
