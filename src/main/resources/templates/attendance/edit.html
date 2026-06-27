@@ -43,11 +43,11 @@
                             <label class="form-label">勤務時間</label>
                             <div class="time-inputs">
                                 <input type="text" id="startTime" name="startTime" class="form-control time-input"
-                                       placeholder="0900" maxlength="4"
+                                       placeholder="0000" maxlength="4"
                                        th:value="${attendanceDetail?.startTime != null ? attendanceDetail.startTime.format(T(java.time.format.DateTimeFormatter).ofPattern('HHmm')) : ''}">
                                 <span class="time-separator">～</span>
                                 <input type="text" id="endTime" name="endTime" class="form-control time-input"
-                                       placeholder="1800" maxlength="4"
+                                       placeholder="0000" maxlength="4"
                                        th:value="${attendanceDetail?.endTime != null ? attendanceDetail.endTime.format(T(java.time.format.DateTimeFormatter).ofPattern('HHmm')) : ''}">
                             </div>
                         </div>

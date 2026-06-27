@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.YearMonth;
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.List;
 
 @Service
 public class AttendanceService {
@@ -88,7 +87,14 @@ public class AttendanceService {
                     .orElse(null);
 
             if (detail != null) {
-                attendanceMonth.get().getDetails().remove(detail);
+                // データを初期化（NULL設定）
+                detail.setClassification(null);
+                detail.setStartTime(null);
+                detail.setEndTime(null);
+                detail.setBreakMinutes(null);
+                detail.setNightBreakMinutes(null);
+                detail.setRemarks(null);
+                detail.setApprovalStatus(null);
                 attendanceMonthRepository.save(attendanceMonth.get());
             }
         }
