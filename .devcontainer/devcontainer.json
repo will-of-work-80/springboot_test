@@ -1,0 +1,70 @@
+{
+  "name": "Spring Boot + Thymeleaf",
+  "image": "mcr.microsoft.com/devcontainers/java:17-bullseye",
+
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "install_maven": false,
+      "install_gradle": false
+    },
+    "ghcr.io/devcontainers/features/maven:1": {
+      "version": "3.9.0"
+    },
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+
+  "remoteUser": "vscode",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Extension Pack for Java",
+        "vscjava.vscode-maven",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vscjava.vscode-spring-initializr",
+        "ms-vscode.makefile-tools",
+        "Equim.statichtml",
+        "Zignd.html-css-class-completion",
+        "ecmel.vscode-html-css"
+      ],
+      "settings": {
+        "java.server.launchMode": "Standard",
+        "java.debug.settings.showHex": true,
+        "java.compile.nullAnalysis.mode": "automatic",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "redhat.java",
+        "[html]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
+        },
+        "editor.fontSize": 14,
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  },
+
+  "forwardPorts": [8080, 8443],
+  "portsAttributes": {
+    "8080": {
+      "label": "Spring Boot Application",
+      "onAutoForward": "notify"
+    },
+    "8443": {
+      "label": "Spring Boot HTTPS",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "postCreateCommand": "mvn clean install",
+
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.m2/repository,target=/root/.m2/repository,type=bind,consistency=cached"
+  ],
+
+  "remoteEnv": {
+    "JAVA_TOOL_OPTIONS": "-Xmx2048m"
+  }
+}
