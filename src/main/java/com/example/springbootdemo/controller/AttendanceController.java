@@ -47,11 +47,18 @@ public class AttendanceController {
         model.addAttribute("pageTitle", "WEB勤怠");
 
         // 表示年月を決定
+        LocalDate today = LocalDate.now();
+        int currentYear = today.getYear();
+        int currentMonth = today.getMonthValue();
+
         if (year == null || month == null) {
-            LocalDate today = LocalDate.now();
-            year = today.getYear();
-            month = today.getMonthValue();
+            year = currentYear;
+            month = currentMonth;
         }
+
+        // 当月かどうかを判定
+        boolean isCurrentMonth = (year == currentYear && month == currentMonth);
+        model.addAttribute("isCurrentMonth", isCurrentMonth);
 
         // 勤怠情報を取得（なければ作成）
         AttendanceMonth attendanceMonth = attendanceService.getOrCreateAttendanceMonth(user.getId(), year, month);

@@ -45,10 +45,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="detail : ${attendanceMonth.details}"
-                            th:classappend="${detail.dayOfMonth % 7 == 6 ? 'saturday' : detail.dayOfMonth % 7 == 0 ? 'sunday' : 'weekday'}"
-                            class="attendance-row"
-                            th:onclick="|location.href='@{/attendance/edit/}' + ${year} + '/' + ${month} + '/' + ${detail.dayOfMonth}|"
-                            style="cursor: pointer;">
+                            th:class="'attendance-row ' + ${detail.dayOfMonth % 7 == 6 ? 'saturday' : detail.dayOfMonth % 7 == 0 ? 'sunday' : 'weekday'} + ${isCurrentMonth ? '' : ' disabled'}"
+                            th:data-year="${year}"
+                            th:data-month="${month}"
+                            th:data-day="${detail.dayOfMonth}"
+                            th:data-clickable="${isCurrentMonth}">
                             <td class="date-cell">
                                 <span th:text="|${formattedDateMap.get(detail.dayOfMonth)} |">01 </span>
                                 <span class="day-of-week" th:text="${dayOfWeekMap.get(detail.dayOfMonth)}">水</span>
@@ -67,6 +68,23 @@
                 <a th:href="@{/main}">メインページに戻る</a>
             </div>
         </div>
+
+        <script>
+            document.querySelectorAll('.attendance-row').forEach(row => {
+                const isClickable = row.getAttribute('data-clickable') === 'true';
+                if (isClickable) {
+                    row.style.cursor = 'pointer';
+                    row.addEventListener('click', function() {
+                        const year = this.getAttribute('data-year');
+                        const month = this.getAttribute('data-month');
+                        const day = this.getAttribute('data-day');
+                        location.href = '/attendance/edit/' + year + '/' + month + '/' + day;
+                    });
+                } else {
+                    row.style.cursor = 'default';
+                }
+            });
+        </script>
     </th:block>
 </body>
 </html>
