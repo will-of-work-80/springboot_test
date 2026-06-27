@@ -1,17 +1,10 @@
 {
   "name": "Spring Boot + Thymeleaf",
-  "image": "mcr.microsoft.com/devcontainers/java:17-bullseye",
 
-  "features": {
-    "ghcr.io/devcontainers/features/java:1": {
-      "version": "17",
-      "install_maven": false,
-      "install_gradle": false
-    },
-    "ghcr.io/devcontainers/features/maven:1": {
-      "version": "3.9.0"
-    },
-    "ghcr.io/devcontainers/features/git:1": {}
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {}
   },
 
   "remoteUser": "vscode",
@@ -58,7 +51,7 @@
     }
   },
 
-  "postCreateCommand": "mvn clean install",
+  "postCreateCommand": "bash .devcontainer/setup.sh",
 
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.m2/repository,target=/root/.m2/repository,type=bind,consistency=cached"
