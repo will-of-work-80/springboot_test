@@ -43,7 +43,7 @@ public class UserService {
                     User user = new User();
                     user.setCompanyName("〇〇 Company");
                     user.setDepartment("△△部署");
-                    user.setUserName("鄭　守正");
+                    user.setUserName("◇◇　守正");
                     user.setStaffCode("999999999902");
                     user.setUserId("defaultUser");
                     user.setPassword(encodePassword("defaultPass"));

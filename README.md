@@ -89,9 +89,7 @@ java -jar target/springboot-thymeleaf-demo-1.0.0.jar
 アプリケーションを起動した後、ブラウザで以下のURLにアクセスしてください：
 
 - **ログイン画面**: http://localhost:8080/
-- **メインメニュー**: http://localhost:8080/main
-- **勤怠一覧**: http://localhost:8080/attendance
-- **H2 Console**: http://localhost:8080/h2-console
+- user : testUser password : testUser01 
 
 ## ログイン情報
 
