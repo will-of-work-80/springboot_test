@@ -4,7 +4,6 @@ import com.example.springbootdemo.entity.AttendanceMonth;
 import com.example.springbootdemo.entity.AttendanceDetail;
 import com.example.springbootdemo.entity.User;
 import com.example.springbootdemo.service.AttendanceService;
-import com.example.springbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +22,14 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
 
-    @Autowired
-    private UserService userService;
-
+    /**
+     * 勤怠情報を表示する
+     * @param year
+     * @param month
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/attendance")
     public String attendance(
             @RequestParam(name = "year", required = false) Integer year,
@@ -34,6 +38,7 @@ public class AttendanceController {
             Model model) {
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
+        // ログインしていない場合はトップページにリダイレクト
         if (loggedInUser == null) {
             return "redirect:/";
         }
@@ -109,6 +114,15 @@ public class AttendanceController {
         return "attendance/entry";
     }
 
+    /**
+     * 勤怠情報を編集する
+     * @param year
+     * @param month
+     * @param day
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/attendance/edit/{year}/{month}/{day}")
     public String edit(
             @PathVariable Integer year,
@@ -155,6 +169,21 @@ public class AttendanceController {
         return "attendance/edit";
     }
 
+    /**
+     * 勤怠情報を保存する
+     * @param year
+     * @param month
+     * @param day
+     * @param classification
+     * @param startTime
+     * @param endTime
+     * @param breakMinutes
+     * @param nightBreakMinutes
+     * @param remarks
+     * @param session
+     * @param redirectAttributes
+     * @return
+     */
     @PostMapping("/attendance/save")
     public String save(
             @RequestParam Integer year,
@@ -227,6 +256,15 @@ public class AttendanceController {
         return "redirect:/attendance?year=" + year + "&month=" + month;
     }
 
+    /**
+     * 勤怠情報を削除する
+     * @param year
+     * @param month
+     * @param day
+     * @param session
+     * @param redirectAttributes
+     * @return
+     */
     @PostMapping("/attendance/delete")
     public String delete(
             @RequestParam Integer year,

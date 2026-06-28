@@ -16,6 +16,13 @@ public class AttendanceService {
     @Autowired
     private AttendanceMonthRepository attendanceMonthRepository;
 
+    /**
+     * 指定されたユーザー、年、月の勤怠情報を取得する。存在しない場合は新規作成する
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
     public AttendanceMonth getOrCreateAttendanceMonth(Long userId, Integer year, Integer month) {
         Optional<AttendanceMonth> existing = attendanceMonthRepository.findByUserIdAndYearAndMonth(userId, year, month);
 
@@ -38,16 +45,33 @@ public class AttendanceService {
         return attendanceMonthRepository.save(newMonth);
     }
 
+    /**
+     * 指定されたユーザー、年、月の勤怠情報を取得する
+     */
     public AttendanceMonth getAttendanceMonth(Long userId, Integer year, Integer month) {
         return attendanceMonthRepository.findByUserIdAndYearAndMonth(userId, year, month)
                 .orElse(null);
     }
 
+    /**
+     * 指定されたユーザー、年、月の勤怠情報が存在するかを確認する
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
     public boolean hasAttendanceMonth(Long userId, Integer year, Integer month) {
         return attendanceMonthRepository.findByUserIdAndYearAndMonth(userId, year, month)
                 .isPresent();
     }
 
+    /**
+     * 指定された年月日の曜日を取得する
+     * @param year
+     * @param month
+     * @param day
+     * @return
+     */
     public String getDayOfWeekClass(Integer year, Integer month, Integer day) {
         LocalDate date = LocalDate.of(year, month, day);
         int dayOfWeek = date.getDayOfWeek().getValue();
@@ -60,6 +84,13 @@ public class AttendanceService {
         return "weekday";
     }
 
+    /**
+     * 指定された年月日の曜日を日本語で取得する
+     * @param year
+     * @param month
+     * @param day
+     * @return
+     */
     public String getDayOfWeekJapanese(Integer year, Integer month, Integer day) {
         LocalDate date = LocalDate.of(year, month, day);
         String[] dayNames = {"日", "月", "火", "水", "木", "金", "土"};
@@ -68,6 +99,10 @@ public class AttendanceService {
         return dayNames[index];
     }
 
+    /**
+     * 勤怠詳細を保存する
+     * @param detail
+     */
     @Transactional
     public void saveAttendanceDetail(AttendanceDetail detail) {
         if (detail.getId() == null) {
@@ -76,6 +111,13 @@ public class AttendanceService {
         attendanceMonthRepository.save(detail.getAttendanceMonth());
     }
 
+    /**
+     * 勤怠詳細を削除する
+     * @param userId
+     * @param year
+     * @param month
+     * @param day
+     */
     @Transactional
     public void deleteAttendanceDetail(Long userId, Integer year, Integer month, Integer day) {
         Optional<AttendanceMonth> attendanceMonth = attendanceMonthRepository.findByUserIdAndYearAndMonth(userId, year, month);

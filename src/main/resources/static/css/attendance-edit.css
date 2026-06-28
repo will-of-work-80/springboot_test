@@ -76,7 +76,7 @@
 }
 
 .time-inputs .time-input {
-    flex: 0 1 80px;
+    flex: 0 1 180px;
     min-width: 50px;
     text-align: center;
     font-size: 16px;
@@ -249,7 +249,7 @@
     }
 
     .time-inputs .time-input {
-        flex: 0 1 60px;
+        flex: 0 1 160px;
         font-size: 14px;
         padding: 8px 6px;
     }
@@ -288,16 +288,27 @@
         font-size: 13px;
     }
 
+    .time-group .time-inputs {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        width: 100%;
+    }
+
     .time-inputs .time-input {
-        flex: 0 1 50px;
+        flex: 1;
+        min-width: 0;
         font-size: 12px;
-        padding: 6px 4px;
+        padding: 8px 4px;
+        text-align: center;
         letter-spacing: 1px;
     }
 
     .time-separator {
         font-size: 12px;
         margin: 0 3px;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
 
     .btn {

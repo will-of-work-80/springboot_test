@@ -32,6 +32,10 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
+    /**
+     * デフォルトのユーザーを取得する。存在しない場合は新規作成する
+     * @return
+     */
     public User getDefaultUser() {
         return userRepository.findAll().stream()
                 .findFirst()
@@ -47,11 +51,29 @@ public class UserService {
                 });
     }
 
+    /**
+     * ユーザーを作成する
+     * @param companyName
+     * @param department
+     * @param userName
+     * @param staffCode
+     * @param userId
+     * @param password
+     * @return
+     */
     public User createUser(String companyName, String department, String userName, String staffCode, String userId, String password) {
         User user = new User(companyName, department, userName, staffCode, userId, encodePassword(password));
         return userRepository.save(user);
     }
 
+    /**
+     * ユーザー情報を更新する
+     * @param id
+     * @param companyName
+     * @param department
+     * @param userName
+     * @return
+     */
     public User updateUser(Long id, String companyName, String department, String userName) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {

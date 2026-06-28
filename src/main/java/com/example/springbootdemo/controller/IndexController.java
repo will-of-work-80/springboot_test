@@ -20,6 +20,11 @@ public class IndexController {
     @Autowired
     private UserService userService;
 
+    /**
+     * トップページを表示する
+     * @param session
+     * @return
+     */
     @GetMapping("/")
     public String index(HttpSession session) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -29,6 +34,13 @@ public class IndexController {
         return "index";
     }
 
+    /**
+     * ログイン処理
+     * @param userId
+     * @param password
+     * @param model
+     * @return
+     */
     @PostMapping("/login")
     public String login(
             @RequestParam String userId,
@@ -48,6 +60,12 @@ public class IndexController {
         }
     }
 
+    /**
+     * メインページを表示する
+     * @param session
+     * @param model
+     * @return
+     */
     @GetMapping("/main")
     public String main(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
