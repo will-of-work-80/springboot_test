@@ -110,11 +110,20 @@ java -jar target/springboot-thymeleaf-demo-1.0.0.jar
 - ログイン失敗時のエラー表示
 - レスポンシブデザイン対応
 
+| PC | Mobile |
+| --- | --- |
+|<img width="1433" height="809" alt="image" src="https://github.com/user-attachments/assets/ba2ff245-a907-44b1-bf4b-ac9e9ac67d90" /> | <img width="493" height="780" alt="image" src="https://github.com/user-attachments/assets/232a1953-7b3c-4104-9187-ce175a5d2ac4" />|
+
 ### 2. メインメニュー (main.html)
 - ログイン済みユーザー情報を表示（部署、名前、スタッフコード）
 - グリッドレイアウトのメニューシステム
 - WEB勤怠へのリンク
 - Font Awesome アイコン対応
+
+
+| PC | Mobile |
+| --- | --- |
+| <img width="1431" height="816" alt="image" src="https://github.com/user-attachments/assets/315cc3a9-b4d7-4b82-bd04-df8c1f5656c5" /> |<img width="483" height="618" alt="image" src="https://github.com/user-attachments/assets/d77f5c16-0154-44b4-80e2-1f5494264373" /><br> <img width="484" height="435" alt="image" src="https://github.com/user-attachments/assets/5884be77-f4c1-4897-95a2-795a0b8c1601" />|
 
 ### 3. 勤怠一覧 (attendance/entry.html)
 - 月単位での勤怠データ表示
@@ -122,6 +131,11 @@ java -jar target/springboot-thymeleaf-demo-1.0.0.jar
 - 前月・来月へのナビゲーション
 - **当月以外はクリック不可** - 過去月・未来月はグレーアウト
 - 区分、始業時間、終業時間、承認状況を表示
+
+
+| PC | Mobile |
+| --- | --- |
+|<img width="1417" height="806" alt="image" src="https://github.com/user-attachments/assets/0ceff1e2-091d-45f3-9ce9-56bd9c066a37" /><br><img width="1417" height="760" alt="image" src="https://github.com/user-attachments/assets/dbf16cb5-791e-4d2e-9e5b-eaf4b5b009d8" />| <img width="483" height="754" alt="image" src="https://github.com/user-attachments/assets/5f383229-dfda-4257-9e89-a2d96d073c1a" /><br><img width="480" height="726" alt="image" src="https://github.com/user-attachments/assets/a2178cce-1dfa-41fc-9ef6-ee02059dbe59" />|
 
 ### 4. 勤怠編集 (attendance/edit.html)
 - 勤務区分（通常、公休日、休出、法休出）選択
@@ -132,6 +146,14 @@ java -jar target/springboot-thymeleaf-demo-1.0.0.jar
 - 登録、キャンセル、削除ボタン
 - 削除は**論理削除**（レコード保持、データリセット）
 - レスポンシブデザイン対応
+
+
+
+| PC | Mobile |
+| --- | --- |
+|<img width="1418" height="785" alt="image" src="https://github.com/user-attachments/assets/a8df2334-2639-4afd-ab5f-a6f0f44a691c" /><br><img width="1415" height="297" alt="image" src="https://github.com/user-attachments/assets/fcc84f71-cbdd-4dcd-a748-599dce6e16b5" /> | <img width="477" height="707" alt="image" src="https://github.com/user-attachments/assets/d0c057b5-63b3-44a6-9053-7702466d4897" /> <br><img width="486" height="532" alt="image" src="https://github.com/user-attachments/assets/b4d47e9f-aabd-4b28-8fd1-d0deaf7e98e3" /> |
+
+
 
 ## セキュリティ機能
 
@@ -283,8 +305,6 @@ mvn install
 ```
 
 ## 次のステップ
-
-このプロジェクトをベースに、以下の機能を追加してみてください：
 
 - 実データベースへの移行（PostgreSQL, MySQL等）
 - メール通知機能
